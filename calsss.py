@@ -17,13 +17,6 @@ class Student(object):
             f.seek(0)
             f.writelines(lines)'''
       
-#    def neshon(self):
-#        with open('navid.txt', "rb") as f:
-#            while True:
-#                try:
-#                    yield pickle.load(f)
-#                except EOFError:
-#                    break
             
             
     def edit_student(self,p,record):
@@ -33,10 +26,20 @@ class Student(object):
                 i.name=k
                 break
         with open('navid.txt','wb') as f:
-            pickle.dump(p,f, protocol=pickle.HIGHEST_PROTOCOL)
+            for i in p:
+                pickle.dump(i,f, protocol=pickle.HIGHEST_PROTOCOL)
         
         
     
+    def delete_student(self,p,record):
+        for i in range(0,len(p)):
+            if p[i].code==record:
+                del p[i]
+                break
+        with open('navid.txt','wb') as f:
+            for i in p:
+                pickle.dump(i,f, protocol=pickle.HIGHEST_PROTOCOL)
+        
     
                 
     def get_name(self):
@@ -51,6 +54,9 @@ class Manager(object):
             
     def edit_student(self,p,record):
         Student.edit_student(self,p,record)
+        
+    def delete_student(self,p,record):
+        Student.delete_student(self,p,record)
         
     def show_member(self,room):
         room.show_member()
@@ -77,17 +83,48 @@ class Manager(object):
                     yield pickle.load(f)
                 except EOFError:
                     break
+       
+    def sign_up(self,user,pas):
+        with open('userpass.txt','a+') as f:
+            f.write(user)
+            f.write(' '+pas)
             
+    def log_in(self,user,pas):
+        with open('userpass.txt','r+') as f:
+            lines=f.readlines()
+            for i in range(0,len(lines)):
+                z=lines[i].split(' ')
+                if z[0]==user and z[1]==pas:
+                    print("welcome",user)
+                    break
+                else:
+                    print("something is wrong!!!")
 
+
+    '''def edit_student(self,record):
+        with open('navid.txt','r+') as f:
+            lines=f.readlines()
+            for i in range(0,len(lines)):
+                if record in lines[i]:
+                    k=input("give the new name: ")
+                    p=lines[i].split(" ")
+                    lines[i]=k+" "+p[1]
+                    break
+            f.seek(0)
+            f.writelines(lines)'''
+
+
+        
     
-    def delete_student(self,record):
-        with open("navid.txt", "r") as f:
-            lines = f.readlines()
-            with open("navid.txt", "w") as f:
-                for line in lines:
-                    if record not in line: 
-                        f.write(line)
-    
+#    def delete_student(self,record):
+#        with open("navid.txt", "r") as f:
+#            lines = f.readlines()
+#            with open("navid.txt", "w") as f:
+#                for line in lines:
+#                    if record not in line: 
+#                        f.write(line)
+
+            
     
     def __str__(self):
         return self.name
@@ -129,37 +166,60 @@ class Room(object):
                 self.member.remove(Student)
         
             
-'''
-he = Student('vahid','12467')
-she = Student('navid','23252')
-manager = Manager('kasra')
-room = Room('1','4','12','1')
-room.add_member(he)
-room.add_member(she)
-manager.show_member(room)'''
+
+#he = Student('vahid','12467')
+#she = Student('navid','23252')
+#manager = Manager('kasra')
+#room = Room('1','4','12','1')
+#room.add_member(he)
+#room.add_member(she)
+#manager.show_member(room)
 
 
 
 #he = Student('vahid','12467')
 #she = Student('navid','23252')
-manager = Manager('kasra')
-record = "23252"
+#manager = Manager('kasra')
+#record = "23252"
 #manager.add(he)
 #manager.add(she)
 
 ###### edit kardane daneshjo ###############
-he = Student('vahid','12467')
-she = Student('navid','23252')
-manager = Manager('kasra')
-record = "23252"
-manager.add(he)
-manager.add(she)
-p=list(manager.load())
-manager.edit_student(p,record)
+#he = Student('mahsa','1533')
+#she = Student('sanaz','234349')
+#manager = Manager('kasra')
+#record = "234349"
+#manager.add(he)
+#manager.add(she)
+#p=list(manager.load())
+#manager.edit_student(p,record)
 #############################################
 
 
 
+
+############ delete an student###############
+#manager = Manager('kasra')
+#p=list(manager.load())
+#record= "12467"
+#manager.delete_student(p,record)
+#############################################
+
+
+########### username and password ############
+manager = Manager('kasra')                
+l=input("1-sign up\n2-log in")
+if l=="1":
+    user=input("Username: ")
+    pas=input("Password: ")
+    manager.sign_up(user,pas)
+elif l=="2":
+    user=input("Username: ")
+    pas=input("Password: ")
+    manager.log_in(user,pas)
+
+
+#################################################
 
 
 '''
